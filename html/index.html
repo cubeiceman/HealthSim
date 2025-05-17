@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Health Simulator</title>
+        <link rel="shortcut icon" href="https://cdn.pixabay.com/photo/2017/09/23/16/33/pixel-heart-2779422_1280.png" type="image/x-icon">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
+        <link href="../css/style.css" rel="stylesheet" type="text/css">
+    </head>
+
+    <body>
+        
+        <div>
+            
+        </div>
+        
+
+        <div id="main">
+            <!--HEALTH BARS-->
+            <div class="bar">
+                <p>Physical Health:<div id="healthbar" class="w3-container w3-round w3-green" style="width: 100%">100%</div><p>
+                <p>Mental Health:<div id="mentalbar" class="w3-container w3-round w3-red" style="width: 100%">100%</div><p></p>
+            </div>
+
+            <!--PERSON SPRITE-->
+            <div class="person">
+                <img id="sprite" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Basic_human_drawing.png/285px-Basic_human_drawing.png">
+                <!-- <iframe src="https://my.spline.design/nexbotrobotcharacterconcept-xfFUc8Blryyiij8w5isSRoQr/" allow="autoplay; fullscreen" style="border-radius: 10px;margin-left: 10px;"></iframe> -->
+            </div>
+
+            <!-- INFORMATION BOX -->
+            <div class="info">
+                <h3>Activity:</h3>
+                <p id="activity-tooltip">Nothing has been clicked yet</p>
+            </div>
+
+            <!--ACTIVITY LIST-->
+            <div class="activityList">
+                <button class="activity button is-info">Exercise</button>
+                <br>
+                <button class="activity button is-info">Eat Junk Food</button>
+                <br>
+                <button class="activity button is-info">Sleep</button>
+                <br>
+                <button class="activity button is-info">Eat Vegetables</button>
+                <br>
+                <button class="activity button is-info">Watch YouTube</button>
+                <br>
+                <button class="activity button is-info">Listen to Music</button>
+                <br>
+                <button class="activity button is-info">Stay up late</button>
+                <br>
+                <button class="activity button is-info">Go to school</button>
+                <br>
+                <button class="activity button is-info">Do homework</button>
+                <br>
+                <button class="activity button is-info">Do chores</button>
+                <br>
+            </div>
+
+            <!--Time-->
+            <div class="current">
+                <h3 id="day">Day:</h3>
+                <h3 id="time">Time:</h3>
+            </div>
+        </div>
+        
+
+        <script src="../js/index.js"></script>
+
+    </body>
+</html>
