@@ -1,11 +1,16 @@
 // player state
 let state = "home";
 
+// time slots for where bob is supposed to be in certain time intervals (in minutes)
 let timeSlots = {
-    "home": [0, 1440, 0, 0],
-    "school": [480, 960, 0, -1],
-    "sleep": [0, 420, -1, -1]
+    "home": [0, 1440, 0, 0], // the entire day
+    "school": [480, 960, 0, -1], // 8 am - 4 pm
+    "sleep": [0, 420, -1, -1] // 12 am to 7 am
 }
+
+// tracks how much sleep bob gets
+let lastSlept = [0, 0];
+let timeSinceSlept = 0;
 
 // main
 let mainDiv = document.body;
@@ -52,6 +57,8 @@ let info = {
     "Go home": [-3, -3, 30, "The journey back can be tiring."]
 }
 
+// if bob is not at the correct place he will be punished
+// uses timeSlots
 function consequencesBAM() {
     for (let i = 0; i < Object.keys(timeSlots).length; i++) {
         let key = Object.keys(timeSlots)[i];
@@ -62,6 +69,7 @@ function consequencesBAM() {
     }
 }
 
+// actions bob can do while he is sleeping
 function sleepActions() {
     for (let i = 0; i < activityList.childNodes.length; i++) {
         if (activityList.childNodes[i].classList && activityList.childNodes[i].classList.contains("sleep")) {
@@ -70,8 +78,12 @@ function sleepActions() {
             activityList.childNodes[i].disabled = true;
         }
     }
+    lastSlept[0] = day;
+    lastSlept[1] = time % 60;
+    timeSinceSlept = 0;
 }
 
+// actions bob can do while he is at school
 function schoolActions() {
     for (let i = 0; i < activityList.childNodes.length; i++) {
         if (activityList.childNodes[i].classList && activityList.childNodes[i].classList.contains("school")) {
@@ -82,6 +94,7 @@ function schoolActions() {
     }
 }
 
+// actions bob can do while he at home
 function homeActions() {
     for (let i = 0; i < activityList.childNodes.length; i++) {
         if (activityList.childNodes[i].classList && activityList.childNodes[i].classList.contains("home")) {
@@ -89,9 +102,13 @@ function homeActions() {
         } else {
             activityList.childNodes[i].disabled = true;
         }
+        if (activityList.childNodes[i].textContent == "Go to school" && day == 5 && day == 6) {
+            activityList.childNodes[i].disabled = true;
+        }
     }
 }
 
+// filters which actions are available to bob
 function runState() {
     switch (state) {
         case "sleep":
@@ -110,11 +127,24 @@ function runState() {
 
 function updateTime(timePassed) {
     time += timePassed;
+
+    for (let i = 0; i < day - lastSlept[0]; i++) {
+        timeSinceSlept += i * 1440;
+    }
+    for (let j = 0; j < (time % 60) - lastSlept[1]; j++) {
+        timeSinceSlept += j;
+    }
+
     if (time >= 1440) {
         time = time - 1440;
         day++;
         if (day > 6) {
-            day = 0;// game should end, just a placeholder for now
+            if (confirm("You won!!!!!!! Bob is well :). Do you want to play again?")) {
+                location.reload();
+            }
+            else {
+                window.close();
+            }
         }
     }
 
@@ -149,7 +179,7 @@ function updateTime(timePassed) {
     }
 }
 
-
+// makes sure bob's physical and mental health are between 0 and 100
 function clampStats() {
     if (personInfo.physical > 100) {
         personInfo.physical = 100;
@@ -165,6 +195,7 @@ function clampStats() {
         personInfo.mental = 0;
     }
 }
+
 
 function setBarPercent(bar, percent) {
     bar.style.transition = 'width 0.5s ease-in-out';
@@ -182,7 +213,7 @@ activityList.childNodes.forEach((node, index) => {
             personInfo.currentActivity = node.textContent;
             updateTime(info[node.textContent][2]);
             
-            // set state
+            // set state using button content
             switch (node.textContent) {
                 case "Sleep":
                     state = "sleep";
@@ -206,9 +237,10 @@ activityList.childNodes.forEach((node, index) => {
 
         })
     }
+
 })
 
-
+// automatically increments time
 function incrementMinutes() {
     updateTime(1);
     clampStats();
@@ -216,18 +248,24 @@ function incrementMinutes() {
     consequencesBAM();
     setBarPercent(mentalBar, personInfo.mental);
     setBarPercent(healthBar, personInfo.physical);
+
+    lastSlept[1] += time;
+
     if (personInfo.mental == 0 || personInfo.physical == 0) {
         alert("You lost!!!!!!! Bob is gone :(");
         location.reload();
     }
-    console.log(state)
+    if (timeSinceSlept >= 2880) {
+        alert("You lost!!!!!!! Bob didn't sleep enough :(");
+        window.close();
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // speech.text = "Hello! I'm Bob";
-    // window.speechSynthesis.speak(speech);
-    // speech.text = "Help me learn how to live a healthy life!"
-    // window.speechSynthesis.speak(speech);
+    speech.text = "Hello! I'm Bob";
+    window.speechSynthesis.speak(speech);
+    speech.text = "Help me learn how to live a healthy life!"
+    window.speechSynthesis.speak(speech);
 
     document.addEventListener("click", (btn) => {
         setBarPercent(mentalBar, personInfo.mental);
