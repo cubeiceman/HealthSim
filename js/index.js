@@ -1,3 +1,7 @@
+// player state
+let state = "home";
+let stateComplete = true;
+
 // bars
 let healthBar = document.querySelector('#healthbar');
 let mentalBar = document.querySelector('#mentalbar');
@@ -18,16 +22,63 @@ let days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", 
 
 // "[action]": [physical, mental, time taken (minutes), tooltip]
 let info = {
-    "Exercise": [5, 5, 60, "Exercise is good for your physical and mental health!"],
-    "Eat Junk Food": [-10, 10, 15, "Eating junk food may feel good, but it hurts you more than you think."],
-    "Sleep": [50, 50, 480, "Sleeping provide a huge energy boost"],
-    "Eat Vegetables": [10, -5, 5, "Eating vegetables may not taste as good as junk food but it helps you a lot."],
-    "Watch YouTube" : [0, 5, 30, "Watching Youtube elevates your mood"],
-    "Listen to Music": [0, 5, 15, "Listening to music is a great way to relax."],
-    "Stay up late": [-10, 0, 60, "Staying up late to do homework will hurt your health."],
-    "Go to school": [-10, 0, 480, "Going to school helps you stay on top of your schoolwork."],
-    "Do homework": [0, -10, 120, "Doing homework helps you understand the material better."],
-    "Do chores": [-5, -5, 30, "Doing chores keeps a clean mind"]
+    "Exercise": [10, 5, 45, "Exercise boosts your health and mood."],
+    "Eat Junk Food": [-5, 5, 15, "Tastes good, but hurts your physical health."],
+    "Sleep": [20, 30, 480, "Restores your body and mind."],
+    "Eat Vegetables": [5, 0, 10, "Nutritious and helps your health over time."],
+    "Watch YouTube": [-5, 10, 30, "Fun, but too much can drain you physically."],
+    "Listen to Music": [0, 10, 20, "Great for relaxing and boosting mental health."],
+    "Stay up late": [-15, -5, 120, "Less rest means poorer health and mood."],
+    "Go to school": [-10, 5, 420, "Mentally enriching, but physically tiring."],
+    "Do homework": [-5, 10, 120, "Helps learning, but costs energy."],
+    "Do chores": [-2, -2, 30, "Necessary but not enjoyable."],
+    "Wake Up": [0, 0, 0, "Time to start your day!"],
+}
+
+function sleepActions() {
+    for (let i = 0; i < activityList.childNodes.length; i++) {
+        if (activityList.childNodes[i].classList && activityList.childNodes[i].classList.contains("sleep")) {
+            activityList.childNodes[i].disabled = false;
+        } else {
+            activityList.childNodes[i].disabled = true;
+        }
+    }
+}
+
+function schoolActions() {
+    for (let i = 0; i < activityList.childNodes.length; i++) {
+        if (activityList.childNodes[i].classList && activityList.childNodes[i].classList.contains("school")) {
+            activityList.childNodes[i].disabled = false;
+        } else {
+            activityList.childNodes[i].disabled = true;
+        }
+    }
+}
+
+function homeActions() {
+    for (let i = 0; i < activityList.childNodes.length; i++) {
+        if (activityList.childNodes[i].classList && activityList.childNodes[i].classList.contains("home")) {
+            activityList.childNodes[i].disabled = false;
+        } else {
+            activityList.childNodes[i].disabled = true;
+        }
+    }
+}
+
+function runState() {
+    switch (state) {
+        case "sleep":
+            sleepActions();
+            break;
+        case "school":
+            schoolActions();
+            break;
+        case "home":
+            homeActions();
+            break;
+        default:
+            break;
+    }
 }
 
 function updateTime(timePassed) {
@@ -40,7 +91,7 @@ function updateTime(timePassed) {
         }
     }
 
-    dayText.innerHTML = "Day: " + days[day];
+    dayText.innerText = "Day: " + days[day];
 
     
     let hours = Math.floor(time / 60);
@@ -54,22 +105,24 @@ function updateTime(timePassed) {
         hours -= 12
     }
 
+    if (hours == 0) {
+        hours = 12;
+    }
+
     
     if (hours < 10 && minutes < 10) {
-        timeText.innerHTML = "Time: " + hours + ":0" + minutes + " " + period;
+        timeText.innerText = "Time: " + hours + ":0" + minutes + " " + period;
     }
     else if (hours < 10) {
-        timeText.innerHTML = "Time: 0" + hours + ":" + minutes + " " + period;
+        timeText.innerText = "Time: 0" + hours + ":" + minutes + " " + period;
     }
     else if (minutes < 10) {
-        timeText.innerHTML = "Time: " + hours + ":0" + minutes + " " + period;
+        timeText.innerText = "Time: " + hours + ":0" + minutes + " " + period;
     }
     else {
-        timeText.innerHTML = "Time: " + hours + ":" + minutes + " " + period;
+        timeText.innerText = "Time: " + hours + ":" + minutes + " " + period;
     }
 }
-
-
 
 
 function clampStats() {
@@ -104,9 +157,31 @@ activityList.childNodes.forEach((node, index) => {
             }
             personInfo.mental += info[node.textContent][1]
             personInfo.physical += info[node.textContent][0]
+            personInfo.currentActivity = node.textContent
             activityTooltip.textContent = info[node.textContent][3]
+            
+            // set state
+            switch (node.textContent) {
+                case "Sleep":
+                    state = "sleep";
+                    break;
+                case "Go to school":
+                    state = "school";
+                    break;
+                case "Go Home":
+                    state = "home";                  
+                    break;
+                case "Wake Up":
+                    state = "home";
+                    break;
+            }
+            
+            
             updateTime(info[node.textContent][2]);
             clampStats();
+            runState();
+
+            console.log(personInfo, state);
         })
     }
 })
