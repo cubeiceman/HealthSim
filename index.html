@@ -1,77 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width">
-        <title>Health Simulator</title>
-        <link rel="shortcut icon" href="https://cdn.pixabay.com/photo/2017/09/23/16/33/pixel-heart-2779422_1280.png" type="image/x-icon">
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
-        <link href="./css/style.css" rel="stylesheet" type="text/css">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Simulator</title>
 
-    <body>
-        
-        <div>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="status-bars"> <!-- status bars -->
+            <div class="status">
+                <div class="label">Physical Health</div>
+                <div class="bar">
+                    <div id="physicalbar" class="fill green" style="width: 100%;"></div>
+                </div>
+            </div>
             
+            <div class="status">
+                <div class="label">Mental Health</div>
+                <div class="bar">
+                    <div id="mentalbar" class="fill blue" style="width: 100%;"></div>
+                </div>
+            </div>
+        </div> <!-- status bars -->
+
+        <!-- time info -->
+        <div class="info">
+            <div id="day">Day: Monday</div>
+            <div id="time">Time: 6:00 AM</div>
         </div>
-        
 
-        <div id="main">
-            <!--HEALTH BARS-->
-            <div class="bar">
-                <p>Physical Health:<div id="healthbar" class="w3-container w3-round w3-green" style="width: 100%">100%</div><p>
-                <p>Mental Health:<div id="mentalbar" class="w3-container w3-round w3-red" style="width: 100%">100%</div><p></p>
-            </div>
 
-            <!--PERSON SPRITE-->
-            <div class="person">
-                <!-- <iframe src="https://my.spline.design/dancingstickman-8ZeMUvjFeQToYAV6hKzKWO2W/" allow="autoplay; fullscreen" style="border-radius: 10px;margin-left: 10px;"></iframe> -->
-                <!-- <img id="sprite" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Basic_human_drawing.png/285px-Basic_human_drawing.png"> -->
-                <!-- <iframe src="https://my.spline.design/nexbotrobotcharacterconcept-xfFUc8Blryyiij8w5isSRoQr/" allow="autoplay; fullscreen" style="border-radius: 10px;margin-left: 10px;"></iframe> -->
-                <img src="../images/char.png" alt="character" style="padding: 20px; height: 100%; width: 100%;">
-            </div>
-
-            <!-- INFORMATION BOX -->
-            <div class="info">
-                <h3>Activity:</h3>
-                <p id="activity-tooltip">Nothing has been clicked yet</p>
-            </div>
-
-            <!--ACTIVITY LIST-->
-            <div class="activityList">
-                <button class="home activity button is-info">Exercise</button>
-                <br>
-                <button class="home activity button is-info">Eat Junk Food</button>
-                <br>
-                <button class="sleep activity button is-info">Sleep</button>
-                <br>
-                <button class="home activity button is-info">Eat Vegetables</button>
-                <br>
-                <button class="home activity button is-info">Watch YouTube</button>
-                <br>
-                <button class="home activity button is-info">Listen to Music</button>
-                <br>
-                <button class="home activity button is-info">Stay up late</button>
-                <br>
-                <button class="school activity button is-info">Go to school</button>
-                <br>
-                <button class="home activity button is-info">Do homework</button>
-                <br>
-                <button class="home activity button is-info">Do chores</button>
-                <br>
-                <button class="sleep home activity button is-info">Wake Up</button>
-                <br>
-            </div>
-
-            <!--Time-->
-            <div class="current">
-                <h3 id="day">Day:</h3>
-                <h3 id="time">Time:</h3>
-            </div>
+        <!-- character sprite -->
+        <div class="character">
+            <img id="sprite" src="../images/character.png">
         </div>
-        
 
-        <script src="./js/index.js"></script>
-
-    </body>
+        <div class="button-grid" id="activityList">
+            <button class="home activity">Exercise</button>                <button class="home activity button is-info">Eat Junk Food</button>
+            <button class="home activity">Sleep</button>
+            <button class="home activity">Eat Vegetables</button>
+            <button class="home activity">Watch YouTube</button>
+            <button class="home activity">Listen to Music</button>
+            <button class="home activity">Stay up late</button>
+            <button class="home activity">Go to school</button>
+            <button class="home school activity">Do homework</button>
+            <button class="home activity">Do chores</button>
+            <button class="sleep activity">Wake Up</button>
+            <button class="school activity">Go home</button>
+        </div>
+    </div>
+    <script src="../js/index.js"></script>
+</body>
 </html>
