@@ -8,7 +8,11 @@ let timeSlots = {
 }
 
 // main
+<<<<<<< HEAD
 let mainDiv = document.body;
+=======
+let mainDiv = document.querySelector("#main");
+>>>>>>> 5d4fbcc1c12981b7969ed884b3e5091ebf987664
 
 // speech
 let speech = new SpeechSynthesisUtterance();
@@ -22,6 +26,9 @@ speech.voice = voices[0];
 // bars
 let healthBar = document.querySelector('#physicalbar');
 let mentalBar = document.querySelector('#mentalbar');
+let speedSlider = document.querySelector('#speed');
+let speedLabel = document.querySelector('#speed-label');
+
 
 
 let activityList = document.querySelector("#activityList")
@@ -180,6 +187,10 @@ activityList.childNodes.forEach((node, index) => {
             personInfo.mental += info[node.textContent][1];
             personInfo.physical += info[node.textContent][0];
             personInfo.currentActivity = node.textContent;
+<<<<<<< HEAD
+=======
+            activityTooltip.textContent = info[node.textContent][3];
+>>>>>>> 5d4fbcc1c12981b7969ed884b3e5091ebf987664
             updateTime(info[node.textContent][2]);
             
             // set state
@@ -208,6 +219,22 @@ activityList.childNodes.forEach((node, index) => {
     }
 })
 
+speedSlider.addEventListener('input', (e) => {
+    speedLabel.innerText = "Speed: " + speedSlider.value + "x";
+})
+
+function incrementMinutes() {
+    updateTime(1 * speedSlider.value);
+    clampStats();
+    runState();
+    consequencesBAM();
+    setBarPercent(mentalBar, personInfo.mental);
+    setBarPercent(healthBar, personInfo.physical);
+    if (personInfo.mental == 0 || personInfo.physical == 0) {
+        alert("You lost!!!!!!! Bob is gone :(");
+        location.reload();
+    }
+}
 
 function incrementMinutes() {
     updateTime(1);
@@ -247,4 +274,8 @@ function shake(time = 500) {
     }, time);
 }
 
+<<<<<<< HEAD
 setInterval(incrementMinutes, 500);
+=======
+setInterval(incrementMinutes, 500);
+>>>>>>> 5d4fbcc1c12981b7969ed884b3e5091ebf987664
