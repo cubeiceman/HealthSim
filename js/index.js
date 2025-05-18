@@ -1,10 +1,30 @@
 // player state
 let state = "home";
-let stateComplete = true;
+
+let timeSlots = {
+    "home": [0, 1440, 0, 0],
+    "school": [480, 960, 0, -1],
+    "sleep": [0, 420, -1, -1]
+}
+
+// main
+let mainDiv = document.querySelector("#main");
+
+// speech
+let speech = new SpeechSynthesisUtterance();
+speech.rate = 0.8; // Speed of speech
+speech.pitch = 1.2; // Pitch of speech
+speech.volume = 0.9; // Volume of speech
+
+let voices = window.speechSynthesis.getVoices();
+speech.voice = voices[0];
 
 // bars
 let healthBar = document.querySelector('#healthbar');
 let mentalBar = document.querySelector('#mentalbar');
+let speedSlider = document.querySelector('#speed');
+let speedLabel = document.querySelector('#speed-label');
+
 
 let activityList = document.querySelector(".activityList")
 let activityTooltip = document.querySelector("#activity-tooltip")
@@ -22,17 +42,28 @@ let days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", 
 
 // "[action]": [physical, mental, time taken (minutes), tooltip]
 let info = {
-    "Exercise": [10, 5, 45, "Exercise boosts your health and mood."],
-    "Eat Junk Food": [-5, 5, 15, "Tastes good, but hurts your physical health."],
-    "Sleep": [20, 30, 480, "Restores your body and mind."],
-    "Eat Vegetables": [5, 0, 10, "Nutritious and helps your health over time."],
-    "Watch YouTube": [-5, 10, 30, "Fun, but too much can drain you physically."],
-    "Listen to Music": [0, 10, 20, "Great for relaxing and boosting mental health."],
-    "Stay up late": [-15, -5, 120, "Less rest means poorer health and mood."],
-    "Go to school": [-10, 5, 420, "Mentally enriching, but physically tiring."],
-    "Do homework": [-5, 10, 120, "Helps learning, but costs energy."],
-    "Do chores": [-2, -2, 30, "Necessary but not enjoyable."],
-    "Wake Up": [0, 0, 0, "Time to start your day!"],
+    "Exercise": [12, 8, 45, "Boosts your energy and mood significantly."],
+    "Eat Junk Food": [-3, 3, 15, "A quick treat, but can slowly impact your physical health."],
+    "Sleep": [25, 35, 60, "Crucial for recovery and mental clarity."],
+    "Eat Vegetables": [7, 2, 10, "Nourishes your body for long-term well-being."],
+    "Watch YouTube": [-2, 7, 30, "Entertaining, but can be a time sink and slightly tiring."],
+    "Listen to Music": [1, 12, 20, "Uplifting and great for your mental state."],
+    "Stay up late": [-10, -3, 120, "Reduces your physical and mental reserves."],
+    "Go to school": [-7, 8, 30, "Academically stimulating but can be draining."],
+    "Do homework": [-3, 7, 120, "Important for learning and can be mentally engaging."],
+    "Do chores": [-1, -1, 30, "Small tasks that need to be done."],
+    "Wake Up": [0, 0, 0, "The start of a new day."],
+    "Go home": [-3, -3, 30, "The journey back can be tiring."]
+}
+
+function consequencesBAM() {
+    for (let i = 0; i < Object.keys(timeSlots).length; i++) {
+        let key = Object.keys(timeSlots)[i];
+        if (state != key && time >= timeSlots[key][0] && time <= timeSlots[key][1]) {
+            personInfo.physical += timeSlots[key][2];
+            personInfo.mental += timeSlots[key][3];
+        }
+    }
 }
 
 function sleepActions() {
@@ -103,10 +134,8 @@ function updateTime(timePassed) {
     
     if (hours > 12) {
         hours -= 12
-    }
-
-    if (hours == 0) {
-        hours = 12;
+    } else if (hours == 0) {
+        hours = 12
     }
 
     
@@ -151,14 +180,12 @@ function setBarPercent(bar, percent) {
 // add activity button functions
 activityList.childNodes.forEach((node, index) => {
     if (node.classList) {
-        node.addEventListener('click', (e) => {
-            if (personInfo.mental == 0 || personInfo.physical == 0) {
-                location.reload();
-            }
-            personInfo.mental += info[node.textContent][1]
-            personInfo.physical += info[node.textContent][0]
-            personInfo.currentActivity = node.textContent
-            activityTooltip.textContent = info[node.textContent][3]
+        node.addEventListener('click', (e) => {            
+            personInfo.mental += info[node.textContent][1];
+            personInfo.physical += info[node.textContent][0];
+            personInfo.currentActivity = node.textContent;
+            activityTooltip.textContent = info[node.textContent][3];
+            updateTime(info[node.textContent][2]);
             
             // set state
             switch (node.textContent) {
@@ -168,7 +195,7 @@ activityList.childNodes.forEach((node, index) => {
                 case "Go to school":
                     state = "school";
                     break;
-                case "Go Home":
+                case "Go home":
                     state = "home";                  
                     break;
                 case "Wake Up":
@@ -177,20 +204,41 @@ activityList.childNodes.forEach((node, index) => {
             }
             
             
-            updateTime(info[node.textContent][2]);
+            
             clampStats();
             runState();
 
-            console.log(personInfo, state);
+
         })
     }
 })
 
+speedSlider.addEventListener('input', (e) => {
+    speedLabel.innerText = "Speed: " + speedSlider.value + "x";
+})
+
+function incrementMinutes() {
+    updateTime(1 * speedSlider.value);
+    clampStats();
+    runState();
+    consequencesBAM();
+    setBarPercent(mentalBar, personInfo.mental);
+    setBarPercent(healthBar, personInfo.physical);
+    if (personInfo.mental == 0 || personInfo.physical == 0) {
+        alert("You lost!!!!!!! Bob is gone :(");
+        location.reload();
+    }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
+    // speech.text = "Hello! I'm Bob";
+    // window.speechSynthesis.speak(speech);
+    // speech.text = "Help me learn how to live a healthy life!"
+    // window.speechSynthesis.speak(speech);
+
     document.addEventListener("click", (btn) => {
-        setBarPercent(mentalBar, personInfo.mental)
-        setBarPercent(healthBar, personInfo.physical)
+        setBarPercent(mentalBar, personInfo.mental);
+        setBarPercent(healthBar, personInfo.physical);
     })
 })
 
@@ -198,3 +246,12 @@ function myFunction() {
     var popup = document.getElementById("myPopup");
     popup.classList.toggle("show");
 }
+
+function shake(time = 500) {
+    mainDiv.style.animationPlayState = "running";
+    setTimeout(() => {
+        mainDiv.style.animationPlayState = "paused";
+    }, time);
+}
+
+setInterval(incrementMinutes, 500);
