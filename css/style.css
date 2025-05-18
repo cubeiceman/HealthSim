@@ -13,40 +13,26 @@
     grid-template-rows: 1fr 1fr 1fr 1fr;
     height: 100vh;
     width: 100vw;
+
+    animation: shake 0.5s infinite;
+
+    animation-play-state: paused;
 }
 
-/* debug */
-
-/* #main > div {
-    border: solid lightgray;
-    border-width: medium;
-} */
-
-.activityList > button {
-  background-color: #333; /* Dark background */
-  color: #f0f0f0; /* Light text */
-  border: 1px solid #555; /* Darker border for definition */
-  padding: 0.75em 1.5em; /* Comfortable padding */
-  border-radius: 5px; /* Slightly rounded corners */
-  cursor: pointer; /* Indicate it's clickable */
-  font-size: 1em; /* Base font size */
-  transition: background-color 0.3s ease; /* Smooth hover effect */
-}
-
-.activityList button:hover {
-  background-color: #555; /* Slightly lighter on hover */
-  border-color: #777;
-}
-
-.activityList button:active {
-  background-color: #222; /* Even darker when pressed */
-}
 
 #healthbar {
     display:inline-block;
 }
 
 .bar {
+    width: 80%;
+    background-color: lightgray;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.speed {
     width: 80%;
     background-color: lightgray;
     border-radius: 10px;
@@ -107,3 +93,18 @@ body, html {
     height: 100%;
     border: none;
   }
+
+
+@keyframes shake {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(3px, 1px) rotate(-1deg); }
+  80% { transform: translate(-1px, -1px) rotate(1deg); }
+  90% { transform: translate(1px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
